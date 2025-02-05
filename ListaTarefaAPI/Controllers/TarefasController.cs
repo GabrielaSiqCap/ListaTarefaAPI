@@ -42,6 +42,13 @@ namespace ListaTarefaAPI.Controllers
             return tarefa;
         }
 
+        //Vai retiornar todas as tarefas que foram concluídas 
+        [HttpGet("concluidas")]
+        public async Task<ActionResult<IEnumerable<Tarefa>>> GetTarefasConcluidas()
+        {
+            return await _context.Tarefas.Where(t => t.Concluida == true).ToListAsync();
+        }
+
         // PUT: api/Tarefas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -98,6 +105,23 @@ namespace ListaTarefaAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // PATCH: api/Tarefas/5/concluir
+        [HttpPatch("{id}/concluir")]
+        public async Task<IActionResult> ConcluirTarefa(int id)
+        {
+            var tarefa = await _context.Tarefas.FindAsync(id);
+            if (tarefa == null)
+            {
+                return NotFound();
+            }
+
+            tarefa.Concluida = true;
+            _context.Entry(tarefa).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(tarefa);
         }
 
         private bool TarefaExists(int id)
