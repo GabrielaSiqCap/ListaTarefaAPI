@@ -3,6 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Adicionar e configurar o CORS para permitir que a API seja considerada por qualquer origem
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 // Adicionar a string de conexao ao container.
 builder.Services.AddDbContext<ListaTarefasContext>(options =>
